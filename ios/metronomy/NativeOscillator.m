@@ -1,23 +1,24 @@
 #import "NativeOscillator.h"
 #import <AudioToolbox/AudioToolbox.h>
 
-double frequency = 440;
-double theta = 0;
-double sampleRate = 44100;
+double __frequency = 880;
+double __theta = 0;
+double __sampleRate = 44100;
+int tri_theta = 1;
 
-OSStatus RenderTone(
-										void *inRefCon,
-										AudioUnitRenderActionFlags 	*ioActionFlags,
-										const AudioTimeStamp 		*inTimeStamp,
-										UInt32 						inBusNumber,
-										UInt32 						inNumberFrames,
-										AudioBufferList 			*ioData)
+OSStatus RenderToneSine(
+												void *inRefCon,
+												AudioUnitRenderActionFlags *ioActionFlags,
+												const AudioTimeStamp *inTimeStamp,
+												UInt32 inBusNumber,
+												UInt32 inNumberFrames,
+												AudioBufferList *ioData)
 {
 	// Fixed amplitude is good enough for our purposes
 	const double amplitude = 0.25;
 	
-	double newTheta = theta;
-	double theta_increment = 2.0 * M_PI * frequency / sampleRate;
+	double theta = __theta;
+	double theta_increment = 2.0 * M_PI * __frequency / __sampleRate;
 	
 	// This is a mono tone generator so we only need the first buffer
 	const int channel = 0;
@@ -26,16 +27,46 @@ OSStatus RenderTone(
 	// Generate the samples
 	for (UInt32 frame = 0; frame < inNumberFrames; frame++)
 	{
-		buffer[frame] = sin(newTheta) * amplitude;
+		buffer[frame] = sin(theta) * amplitude;
 		
-		newTheta += theta_increment;
-		if (newTheta > 2.0 * M_PI)
+		theta += theta_increment;
+		if (theta > 2.0 * M_PI)
 		{
-			newTheta -= 2.0 * M_PI;
+			theta -= 2.0 * M_PI;
 		}
 	}
 	
-	theta = newTheta;
+	__theta = theta;
+	
+	return noErr;
+}
+
+OSStatus RenderToneTriangle(
+														void *inRefCon,
+														AudioUnitRenderActionFlags *ioActionFlags,
+														const AudioTimeStamp *inTimeStamp,
+														UInt32 inBusNumber,
+														UInt32 inNumberFrames,
+														AudioBufferList *ioData) {
+	// x = m - abs(i % (2*m) - m)
+	
+	const double amplitude = 0.15;
+	const int channel = 0;
+	double theta = __theta;
+	const double theta_increment = __frequency / __sampleRate;
+	Float32 *buffer = (Float32 *)ioData->mBuffers[channel].mData;
+	
+	for (UInt32 frame = 0; frame < inNumberFrames; frame++) {
+		buffer[frame] = amplitude * (1.0 - fabs(fmod(theta, 2.0) - 1.0));
+		
+		theta += theta_increment;
+		
+		if (theta > 2) {
+			theta = 0;
+		}
+	}
+	
+	__theta = theta;
 	
 	return noErr;
 }
@@ -45,7 +76,6 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 }
 
 @implementation NativeOscillator
-
 RCT_EXPORT_MODULE();
 
 - (void)createToneUnit
@@ -66,11 +96,11 @@ RCT_EXPORT_MODULE();
 	
 	// Create a new unit based on this that we'll use for output
 	OSErr err = AudioComponentInstanceNew(defaultOutput, &toneUnit);
-	NSAssert1(toneUnit, @"Error creating unit: %ld", err);
+	NSAssert1(toneUnit, @"Error creating unit: %id", err);
 	
 	// Set our tone rendering function on the unit
 	AURenderCallbackStruct input;
-	input.inputProc = RenderTone;
+	input.inputProc = RenderToneTriangle;
 	input.inputProcRefCon = (__bridge void * _Nullable)(self);
 	err = AudioUnitSetProperty(toneUnit,
 														 kAudioUnitProperty_SetRenderCallback,
@@ -78,13 +108,13 @@ RCT_EXPORT_MODULE();
 														 0,
 														 &input,
 														 sizeof(input));
-	NSAssert1(err == noErr, @"Error setting callback: %ld", err);
+	NSAssert1(err == noErr, @"Error setting callback: %id", err);
 	
 	// Set the format to 32 bit, single channel, floating point, linear PCM
 	const int four_bytes_per_float = 4;
 	const int eight_bits_per_byte = 8;
 	AudioStreamBasicDescription streamFormat;
-	streamFormat.mSampleRate = sampleRate;
+	streamFormat.mSampleRate = __sampleRate;
 	streamFormat.mFormatID = kAudioFormatLinearPCM;
 	streamFormat.mFormatFlags =
 	kAudioFormatFlagsNativeFloatPacked | kAudioFormatFlagIsNonInterleaved;
@@ -99,10 +129,10 @@ RCT_EXPORT_MODULE();
 															0,
 															&streamFormat,
 															sizeof(AudioStreamBasicDescription));
-	NSAssert1(err == noErr, @"Error setting stream format: %ld", err);
+	NSAssert1(err == noErr, @"Error setting stream format: %id", err);
 }
 
-RCT_EXPORT_METHOD(play)
+RCT_EXPORT_METHOD(play:(nonnull NSNumber *)frequency)
 {
 	if (toneUnit)
 	{
@@ -115,6 +145,8 @@ RCT_EXPORT_METHOD(play)
 	else
 	{
 		[self createToneUnit];
+		
+		__frequency = [frequency doubleValue];
 		
 		// Stop changing parameters on the unit
 		OSErr err = AudioUnitInitialize(toneUnit);
@@ -130,12 +162,12 @@ RCT_EXPORT_METHOD(stop)
 {
 	if (toneUnit)
 	{
-		[self play];
+		[self play:0];
 	}
 }
 
 - (id)init {
-	sampleRate = 44100;
+	__sampleRate = 44100;
 	
 	OSStatus result = AudioSessionInitialize(NULL, NULL, ToneInterruptionListener, (__bridge void *)(self));
 	if (result == kAudioSessionNoError)

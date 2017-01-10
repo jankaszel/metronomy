@@ -10,7 +10,7 @@
 	AudioComponentInstance toneUnit;
 }
 
-- (void)play;
+- (void)play:(nonnull NSNumber *)frequency;
 - (void)stop;
 
 @end

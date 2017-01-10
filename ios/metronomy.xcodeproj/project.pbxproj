@@ -22,7 +22,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		3D7FC32D1E2408D9008244C6 /* NativeOscillatorBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7FC32C1E2408D9008244C6 /* NativeOscillatorBridge.m */; };
 		3DE27FD51E24571100EEC517 /* NativeOscillator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE27FD41E24571100EEC517 /* NativeOscillator.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -233,7 +232,6 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = metronomy/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = metronomy/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		3D7FC32C1E2408D9008244C6 /* NativeOscillatorBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NativeOscillatorBridge.m; path = metronomy/NativeOscillatorBridge.m; sourceTree = "<group>"; };
 		3DE27FD41E24571100EEC517 /* NativeOscillator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NativeOscillator.m; path = metronomy/NativeOscillator.m; sourceTree = "<group>"; };
 		3DE27FD61E24573E00EEC517 /* NativeOscillator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NativeOscillator.h; path = metronomy/NativeOscillator.h; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -358,7 +356,6 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				3D7FC32C1E2408D9008244C6 /* NativeOscillatorBridge.m */,
 				3DE27FD41E24571100EEC517 /* NativeOscillator.m */,
 				3DE27FD61E24573E00EEC517 /* NativeOscillator.h */,
 			);
@@ -798,7 +795,6 @@
 				3DE27FD51E24571100EEC517 /* NativeOscillator.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				3D7FC32D1E2408D9008244C6 /* NativeOscillatorBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

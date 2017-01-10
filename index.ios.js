@@ -15,7 +15,7 @@ import {
   TextInput
 } from 'react-native';
 import Timer from './components/Timer';
-import {playNote} from './util/oscillator'
+import {playSequence} from './util/oscillator'
 
 function multiply(n1: number, n2: number): number {
   return n1 * n2;
@@ -63,7 +63,7 @@ export default class metronomy extends Component {
         <Button
           title="Hello, World!"
           onPress={() => {
-            playNote();
+            playSequence();
           }}
         />
       </View>
