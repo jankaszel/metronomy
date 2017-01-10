@@ -53,15 +53,16 @@ OSStatus RenderToneTriangle(
 	const double amplitude = 0.15;
 	const int channel = 0;
 	double theta = __theta;
+	double period = 2.0;
 	const double theta_increment = __frequency / __sampleRate;
 	Float32 *buffer = (Float32 *)ioData->mBuffers[channel].mData;
 	
 	for (UInt32 frame = 0; frame < inNumberFrames; frame++) {
-		buffer[frame] = amplitude * (1.0 - fabs(fmod(theta, 2.0) - 1.0));
+		buffer[frame] = amplitude * (1.0 - fabs(fmod(theta, period) - 0.5*period));
 		
 		theta += theta_increment;
 		
-		if (theta > 2) {
+		if (theta >= period) {
 			theta = 0;
 		}
 	}
@@ -147,6 +148,7 @@ RCT_EXPORT_METHOD(play:(nonnull NSNumber *)frequency)
 		[self createToneUnit];
 		
 		__frequency = [frequency doubleValue];
+		__theta = 0.25;
 		
 		// Stop changing parameters on the unit
 		OSErr err = AudioUnitInitialize(toneUnit);
