@@ -1,7 +1,7 @@
 // @flow
-import React from 'react';
-import {AppRegistry} from 'react-native';
-import App from './app';
+import React from 'react'
+import {AppRegistry} from 'react-native'
+import App from './app'
 
 export default function Metronomy() {
   return (
@@ -9,4 +9,4 @@ export default function Metronomy() {
   )
 }
 
-AppRegistry.registerComponent('metronomy', () => Metronomy);
+AppRegistry.registerComponent('metronomy', () => Metronomy)

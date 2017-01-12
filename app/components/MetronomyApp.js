@@ -3,12 +3,11 @@ import React from 'react'
 import {
   StyleSheet,
   Text,
-  View,
-  Button,
-  Alert,
-  TextInput
+  View
 } from 'react-native'
-import {playSequence} from '../util/oscillator'
+import TimerControl from './TimerControl'
+
+const speed = 0.75
 
 export default () => (
   <View style={styles.container}>
@@ -23,22 +22,11 @@ export default () => (
       Cmd+D or shake for dev menu
     </Text>
 
-    <TextInput
-      style={{height: 40}}
-      placeholder="Speed"
-      onChangeText={value => {}}
-    />
-
-    <Text style={{padding: 10, fontSize: 42}}>
-      {`🍕`}
+    <Text style={styles.instructions}>
+      {`🍕`} The speed is {60/speed} beats per minute.
     </Text>
 
-    <Button
-      title="Hello, World!"
-      onPress={() => {
-        playSequence();
-      }}
-    />
+    <TimerControl delay={0.75} />
   </View>
 )
 
@@ -59,4 +47,4 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-});
+})
