@@ -19,6 +19,14 @@ export default class TimerControl extends Component {
 
   timer = null
 
+  componentWillReceiveProps(nextProps: Props) {
+    const {delay} = nextProps;
+
+    if (this.timer) {
+      this.timer.setDelay(delay * 1000)
+    }
+  }
+
   handleTick() {
     let {tick} = this.state
 
